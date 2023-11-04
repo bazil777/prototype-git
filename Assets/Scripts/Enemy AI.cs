@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 public class EnemyAI : MonoBehaviour
 {
     public GameObject target; // Change this from Transform to GameObject
@@ -10,20 +9,25 @@ public class EnemyAI : MonoBehaviour
     public float moveSpeed = 1.5f;
     public float contactRange = 1.0f; // Define the contact range for the enemy.
     public float attackCooldown = 2.0f; // Time to wait between attacks.
-    
-    public Material chasingMaterial; // Assign the red material in the Inspector.
+
+    public Material chasingMaterial; // Assign chasing in the Inspector.
 
     public int damageAmount = 5;
+    public int maxHealth = 50; // Maximum health of the enemy
 
     private Material originalMaterial;
     private Renderer coneRenderer;
     private bool canAttack = true;
+    private int currentHealth; // Current health of the enemy
+
+    public PlayerGold playerGold; // Reference to the PlayerGold script
 
     void Start()
     {
         // Initialize the coneRenderer and originalMaterial.
         coneRenderer = GetComponent<Renderer>();
         originalMaterial = coneRenderer.material;
+        currentHealth = maxHealth; // Set the current health to the maximum health at the start.
     }
 
     void Update()
@@ -59,5 +63,22 @@ public class EnemyAI : MonoBehaviour
         canAttack = false;
         yield return new WaitForSeconds(attackCooldown);
         canAttack = true;
+    }
+
+    public void TakeDamage(int damage)
+    {
+        currentHealth -= damage;
+
+        if (currentHealth <= 0)
+        {
+            Die();
+        }
+    }
+
+    void Die()
+    {
+       
+        // Destroy the enemy GameObject.
+        Destroy(gameObject);
     }
 }

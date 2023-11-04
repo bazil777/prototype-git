@@ -4,6 +4,7 @@ public class MagicBall : MonoBehaviour
 {
     public float healingRadius = 2f; // Radius within which the player is healed
     public int healingAmount = 5; // Amount of health to restore on contact
+    public int goldDeductionAmount = 10; // Amount of gold to deduct on contact
     public float healingInterval = 1f; // Time interval between healing (adjust as needed)
 
     private float nextHealTime;
@@ -24,11 +25,18 @@ public class MagicBall : MonoBehaviour
             {
                 // Check if the collider belongs to the player
                 PlayerHealth playerHealth = collider.GetComponent<PlayerHealth>();
+                PlayerGold playerGold = collider.GetComponent<PlayerGold>();
 
                 if (playerHealth != null)
                 {
                     // Heal the player if they are in the healing radius
                     playerHealth.Heal(healingAmount);
+
+                    if (playerGold != null)
+                    {
+                        // Deduct gold from the player
+                        playerGold.DeductGold(goldDeductionAmount);
+                    }
                 }
             }
 
